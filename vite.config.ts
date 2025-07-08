@@ -8,6 +8,12 @@ export default defineConfig({
     // Add Vitest configuration
     globals: true, // Enable global API (vi, describe, it, etc.)
     environment: 'node', // Specify the test environment
+    pool: 'forks', // Run tests in separate processes for better isolation
+    poolOptions: {
+      forks: {
+        singleFork: true, // Run tests sequentially to avoid mock conflicts
+      },
+    },
   },
   build: {
     lib: {

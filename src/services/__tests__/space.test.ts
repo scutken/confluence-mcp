@@ -84,7 +84,6 @@ describe('ConfluenceApiService - Spaces', () => {
       expect(space.name).toBe(mockSpacesResponse.results[0].name);
       expect(space.description).toBe(mockSpacesResponse.results[0].description.plain.value);
       expect(space.type).toBe('global'); // Check cleaning logic
-      expect(space.status).toBe('current'); // Check cleaning logic
 
       // Verify the fetch was called with the correct URL
       expect(global.fetch).toHaveBeenCalledTimes(1);

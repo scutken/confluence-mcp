@@ -41,7 +41,6 @@ export interface ConfluenceSpace {
   name: string;
   description?: string;
   type: 'global' | 'personal' | 'team';
-  status: 'current' | 'archived';
 }
 
 export interface SearchSpacesResponse {

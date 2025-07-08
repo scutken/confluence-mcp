@@ -16,9 +16,8 @@ export class ConfluenceApiService {
     // Default delay 200ms
     this.baseUrl = baseUrl;
     this.requestDelay = requestDelayMs;
-    const auth = Buffer.from(`${email}:${apiToken}`).toString('base64');
     this.headers = new Headers({
-      Authorization: `Basic ${auth}`,
+      Authorization: `Bearer ${apiToken}`,
       Accept: 'application/json',
       'Content-Type': 'application/json',
     });
@@ -230,7 +229,6 @@ export class ConfluenceApiService {
         name: space.name,
         description: space.description?.plain?.value,
         type: space.type.toLowerCase(),
-        status: space.status.toLowerCase(),
       })),
     };
   }

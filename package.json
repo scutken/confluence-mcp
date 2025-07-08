@@ -5,7 +5,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "vite build && chmod +x dist/index.js",
+    "build-unix": "vite build && chmod +x dist/index.js",
+    "build": "vite build",
     "start": "bun dist/index.js",
     "dev": "bun --watch src/index.ts",
     "test": "bun test",
@@ -27,15 +28,16 @@
     "lint-staged": "^16.0.0",
     "prettier": "^3.5.3",
     "vite": "^6.3.5",
-    "vitest": "^3.1.4"
     "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.1.4"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.11.4"
-    "sanitize-html": "^2.17.0",
+    "@modelcontextprotocol/sdk": "^1.11.4",
+    "@types/sanitize-html": "^2.16.0",
+    "sanitize-html": "^2.17.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"

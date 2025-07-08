@@ -66,23 +66,24 @@ class ConfluenceServer {
       tools: [
         {
           name: 'get_page',
-          description: 'Retrieve a Confluence page by ID',
+          description: '通过ID获取Confluence页面 / Retrieve a Confluence page by ID',
           inputSchema: {
             type: 'object',
             properties: {
               pageId: {
                 type: 'string',
-                description: 'ID of the Confluence page to retrieve',
+                description: '要获取的Confluence页面ID / ID of the Confluence page to retrieve',
               },
               format: {
                 type: 'string',
                 enum: ['text', 'markdown'],
-                description: 'Format to return the content in (default: text)',
+                description:
+                  '返回内容的格式（默认：text）/ Format to return the content in (default: text)',
               },
               includeMarkup: {
                 type: 'boolean',
                 description:
-                  'Whether to include the original Confluence Storage Format (XHTML) markup in the response (default: false). Useful when you want to update the page later in order to preserve formatting.',
+                  '是否在响应中包含原始的Confluence存储格式（XHTML）标记（默认：false）。当您想稍后更新页面以保留格式时很有用。 / Whether to include the original Confluence Storage Format (XHTML) markup in the response (default: false). Useful when you want to update the page later in order to preserve formatting.',
               },
             },
             required: ['pageId'],
@@ -91,27 +92,29 @@ class ConfluenceServer {
         {
           name: 'search_pages',
           description:
-            'Search for Confluence pages using CQL (Confluence Query Language): query := expression [operator expression]* expression := field | function() | function | "phrase" | term operator := AND | OR | NOT | space field := date | after | before | during | lastmodified | modifiedafter | modifiedbefore | creator | from | to | content | title | body | subject | filename function() := now() | today() | yesterday() | this_week() | last_week() | this_month() | last_month() | this_year() | last_year() function := has | is | is | is | label | type | in value := string | quoted_string | date_format date_format := YYYY-MM-DD | YYYY-MM | YYYY quoted_string := "string with spaces" term := alphanumeric_string',
+            '使用CQL（Confluence查询语言）搜索Confluence页面 / Search for Confluence pages using CQL (Confluence Query Language): query := expression [operator expression]* expression := field | function() | function | "phrase" | term operator := AND | OR | NOT | space field := date | after | before | during | lastmodified | modifiedafter | modifiedbefore | creator | from | to | content | title | body | subject | filename function() := now() | today() | yesterday() | this_week() | last_week() | this_month() | last_month() | this_year() | last_year() function := has | is | is | is | label | type | in value := string | quoted_string | date_format date_format := YYYY-MM-DD | YYYY-MM | YYYY quoted_string := "string with spaces" term := alphanumeric_string',
           inputSchema: {
             type: 'object',
             properties: {
               query: {
                 type: 'string',
-                description: 'CQL search query',
+                description: 'CQL搜索查询 / CQL search query',
               },
               limit: {
                 type: 'number',
-                description: 'Maximum number of results to return (default: 10)',
+                description:
+                  '返回结果的最大数量（默认：10）/ Maximum number of results to return (default: 10)',
               },
               format: {
                 type: 'string',
                 enum: ['text', 'markdown'],
-                description: 'Format to return the content in (default: text)',
+                description:
+                  '返回内容的格式（默认：text）/ Format to return the content in (default: text)',
               },
               includeMarkup: {
                 type: 'boolean',
                 description:
-                  'Whether to include the original Confluence Storage Format (XHTML) markup in the response (default: false)',
+                  '是否在响应中包含原始的Confluence存储格式（XHTML）标记（默认：false）/ Whether to include the original Confluence Storage Format (XHTML) markup in the response (default: false)',
               },
             },
             required: ['query'],
@@ -119,38 +122,40 @@ class ConfluenceServer {
         },
         {
           name: 'get_spaces',
-          description: 'List all available Confluence spaces',
+          description: '列出所有可用的Confluence空间 / List all available Confluence spaces',
           inputSchema: {
             type: 'object',
             properties: {
               limit: {
                 type: 'number',
-                description: 'Maximum number of spaces to return (default: 50)',
+                description:
+                  '返回空间的最大数量（默认：50）/ Maximum number of spaces to return (default: 50)',
               },
             },
           },
         },
         {
           name: 'create_page',
-          description: 'Create a new Confluence page',
+          description: '创建新的Confluence页面 / Create a new Confluence page',
           inputSchema: {
             type: 'object',
             properties: {
               spaceKey: {
                 type: 'string',
-                description: 'Key of the space where the page will be created',
+                description: '将创建页面的空间键 / Key of the space where the page will be created',
               },
               title: {
                 type: 'string',
-                description: 'Title of the new page',
+                description: '新页面的标题 / Title of the new page',
               },
               content: {
                 type: 'string',
-                description: 'Content of the page in Confluence Storage Format (XHTML)',
+                description:
+                  '页面内容，使用Confluence存储格式（XHTML）/ Content of the page in Confluence Storage Format (XHTML)',
               },
               parentId: {
                 type: 'string',
-                description: 'Optional ID of the parent page',
+                description: '可选的父页面ID / Optional ID of the parent page',
               },
             },
             required: ['spaceKey', 'title', 'content'],
@@ -158,26 +163,26 @@ class ConfluenceServer {
         },
         {
           name: 'update_page',
-          description: 'Update an existing Confluence page',
+          description: '更新现有的Confluence页面 / Update an existing Confluence page',
           inputSchema: {
             type: 'object',
             properties: {
               pageId: {
                 type: 'string',
-                description: 'ID of the page to update',
+                description: '要更新的页面ID / ID of the page to update',
               },
               title: {
                 type: 'string',
-                description: 'New title of the page',
+                description: '页面的新标题 / New title of the page',
               },
               content: {
                 type: 'string',
                 description:
-                  'New content in Confluence Storage Format (XHTML). CRITICAL: Content MUST be valid XHTML. Providing plain text or Markdown will result in the markup being displayed literally, not rendered as rich text.',
+                  '使用Confluence存储格式（XHTML）的新内容。重要：内容必须是有效的XHTML。提供纯文本或Markdown将导致标记被字面显示，而不是渲染为富文本。 / New content in Confluence Storage Format (XHTML). CRITICAL: Content MUST be valid XHTML. Providing plain text or Markdown will result in the markup being displayed literally, not rendered as rich text.',
               },
               version: {
                 type: 'number',
-                description: 'Current version number of the page',
+                description: '页面的当前版本号 / Current version number of the page',
               },
             },
             required: ['pageId', 'title', 'content', 'version'],
@@ -185,22 +190,25 @@ class ConfluenceServer {
         },
         {
           name: 'get_comments',
-          description: 'Retrieve comments for a specific Confluence page',
+          description:
+            '获取特定Confluence页面的评论 / Retrieve comments for a specific Confluence page',
           inputSchema: {
             type: 'object',
             properties: {
               pageId: {
                 type: 'string',
-                description: 'ID of the page to retrieve comments for',
+                description: '要获取评论的页面ID / ID of the page to retrieve comments for',
               },
               format: {
                 type: 'string',
                 enum: ['text', 'markdown'],
-                description: 'Format to return comment content in (default: text)',
+                description:
+                  '返回评论内容的格式（默认：text）/ Format to return comment content in (default: text)',
               },
               limit: {
                 type: 'number',
-                description: 'Maximum number of comments to return (default: 25)',
+                description:
+                  '返回评论的最大数量（默认：25）/ Maximum number of comments to return (default: 25)',
               },
             },
             required: ['pageId'],
@@ -208,21 +216,23 @@ class ConfluenceServer {
         },
         {
           name: 'add_comment',
-          description: 'Add a comment to a Confluence page',
+          description: '向Confluence页面添加评论 / Add a comment to a Confluence page',
           inputSchema: {
             type: 'object',
             properties: {
               pageId: {
                 type: 'string',
-                description: 'ID of the page to add the comment to',
+                description: '要添加评论的页面ID / ID of the page to add the comment to',
               },
               content: {
                 type: 'string',
-                description: 'Comment content in Confluence Storage Format (XHTML)',
+                description:
+                  '使用Confluence存储格式（XHTML）的评论内容 / Comment content in Confluence Storage Format (XHTML)',
               },
               parentId: {
                 type: 'string',
-                description: 'Optional ID of the parent comment for threading',
+                description:
+                  '用于线程化的可选父评论ID / Optional ID of the parent comment for threading',
               },
             },
             required: ['pageId', 'content'],
@@ -230,17 +240,19 @@ class ConfluenceServer {
         },
         {
           name: 'get_attachments',
-          description: 'Retrieve attachments for a specific Confluence page',
+          description:
+            '获取特定Confluence页面的附件 / Retrieve attachments for a specific Confluence page',
           inputSchema: {
             type: 'object',
             properties: {
               pageId: {
                 type: 'string',
-                description: 'ID of the page to retrieve attachments for',
+                description: '要获取附件的页面ID / ID of the page to retrieve attachments for',
               },
               limit: {
                 type: 'number',
-                description: 'Maximum number of attachments to return (default: 25)',
+                description:
+                  '返回附件的最大数量（默认：25）/ Maximum number of attachments to return (default: 25)',
               },
             },
             required: ['pageId'],
@@ -248,25 +260,25 @@ class ConfluenceServer {
         },
         {
           name: 'add_attachment',
-          description: 'Add an attachment to a Confluence page',
+          description: '向Confluence页面添加附件 / Add an attachment to a Confluence page',
           inputSchema: {
             type: 'object',
             properties: {
               pageId: {
                 type: 'string',
-                description: 'ID of the page to attach the file to',
+                description: '要附加文件的页面ID / ID of the page to attach the file to',
               },
               filename: {
                 type: 'string',
-                description: 'Desired filename for the attachment',
+                description: '附件的期望文件名 / Desired filename for the attachment',
               },
               fileContentBase64: {
                 type: 'string',
-                description: 'Base64 encoded content of the file',
+                description: '文件的Base64编码内容 / Base64 encoded content of the file',
               },
               comment: {
                 type: 'string',
-                description: 'Optional comment for the attachment version',
+                description: '附件版本的可选注释 / Optional comment for the attachment version',
               },
             },
             required: ['pageId', 'filename', 'fileContentBase64'],
