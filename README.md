@@ -53,12 +53,23 @@ bun run build-unix
 
 ## 配置
 
+### 鉴权方式
+
+本项目使用 **Bearer Token** 鉴权方式访问 Confluence Cloud REST API，这是一种安全且简单的鉴权方法。
+
+#### 获取 API Token
+
+1. confluence进入：用户信息-设置-个人访问令牌
+2. 创建令牌
+3. **重要**：请妥善保存此 token，它只会显示一次
+
+#### 环境变量配置
+
 要使用此 MCP 服务器，您需要设置以下环境变量：
 
 ```env
 CONFLUENCE_API_TOKEN=your_api_token
-CONFLUENCE_BASE_URL=your_confluence_instance_url  # 例如：https://your-domain.atlassian.net/wiki
-CONFLUENCE_USER_EMAIL=your_email
+CONFLUENCE_BASE_URL=your_confluence_instance_url  # 例如：https://wiki.firstshare.cn/
 ```
 
 ### Claude Desktop / Cline 配置
@@ -73,8 +84,7 @@ CONFLUENCE_USER_EMAIL=your_email
       "args": ["/absolute/path/to/confluence-mcp/dist/index.js"],
       "env": {
         "CONFLUENCE_API_TOKEN": "your_api_token",
-        "CONFLUENCE_BASE_URL": "your_confluence_instance_url/wiki",
-        "CONFLUENCE_USER_EMAIL": "your_email"
+        "CONFLUENCE_BASE_URL": "https://wiki.firstshare.cn"
       }
     }
   }

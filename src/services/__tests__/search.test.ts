@@ -60,7 +60,6 @@ const mockSearchResponse = {
 describe('ConfluenceApiService - Search', () => {
   let apiService: ConfluenceApiService;
   const mockBaseUrl = 'https://example.atlassian.net/wiki';
-  const mockEmail = 'test@example.com';
   const mockApiToken = 'api-token-123';
 
   beforeEach(() => {
@@ -77,7 +76,7 @@ describe('ConfluenceApiService - Search', () => {
       );
     }) as any;
 
-    apiService = new ConfluenceApiService(mockBaseUrl, mockEmail, mockApiToken);
+    apiService = new ConfluenceApiService(mockBaseUrl, mockApiToken);
   });
 
   afterEach(() => {

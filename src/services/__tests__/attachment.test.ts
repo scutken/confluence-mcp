@@ -47,7 +47,6 @@ const mockGetAttachmentsResponse = {
 describe('ConfluenceApiService - Attachments', () => {
   let apiService: ConfluenceApiService;
   const mockBaseUrl = 'https://example.atlassian.net/wiki';
-  const mockEmail = 'test@example.com';
   const mockApiToken = 'api-token-123';
 
   beforeEach(() => {
@@ -76,7 +75,7 @@ describe('ConfluenceApiService - Attachments', () => {
       };
     }) as any;
 
-    apiService = new ConfluenceApiService(mockBaseUrl, mockEmail, mockApiToken);
+    apiService = new ConfluenceApiService(mockBaseUrl, mockApiToken);
   });
 
   afterEach(() => {

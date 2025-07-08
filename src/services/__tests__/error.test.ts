@@ -9,7 +9,6 @@ const originalFetch = global.fetch;
 describe('ConfluenceApiService - Error Handling', () => {
   let apiService: ConfluenceApiService;
   const mockBaseUrl = 'https://example.atlassian.net/wiki';
-  const mockEmail = 'test@example.com';
   const mockApiToken = 'api-token-123';
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ConfluenceApiService - Error Handling', () => {
       return Promise.resolve(new Response(JSON.stringify({}), { status: 200 }));
     }) as any;
 
-    apiService = new ConfluenceApiService(mockBaseUrl, mockEmail, mockApiToken);
+    apiService = new ConfluenceApiService(mockBaseUrl, mockApiToken);
   });
 
   afterEach(() => {

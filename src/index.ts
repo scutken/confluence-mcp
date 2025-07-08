@@ -14,17 +14,15 @@ declare module 'bun' {
   interface Env {
     CONFLUENCE_API_TOKEN: string;
     CONFLUENCE_BASE_URL: string;
-    CONFLUENCE_USER_EMAIL: string;
   }
 }
 
 const CONFLUENCE_API_TOKEN = process.env.CONFLUENCE_API_TOKEN;
 const CONFLUENCE_BASE_URL = process.env.CONFLUENCE_BASE_URL;
-const CONFLUENCE_USER_EMAIL = process.env.CONFLUENCE_USER_EMAIL;
 
-if (!CONFLUENCE_API_TOKEN || !CONFLUENCE_BASE_URL || !CONFLUENCE_USER_EMAIL) {
+if (!CONFLUENCE_API_TOKEN || !CONFLUENCE_BASE_URL) {
   throw new Error(
-    'CONFLUENCE_API_TOKEN, CONFLUENCE_USER_EMAIL and CONFLUENCE_BASE_URL environment variables are required'
+    'CONFLUENCE_API_TOKEN and CONFLUENCE_BASE_URL environment variables are required'
   );
 }
 
@@ -45,11 +43,7 @@ class ConfluenceServer {
       }
     );
 
-    this.confluenceApi = new ConfluenceApiService(
-      CONFLUENCE_BASE_URL,
-      CONFLUENCE_USER_EMAIL,
-      CONFLUENCE_API_TOKEN
-    );
+    this.confluenceApi = new ConfluenceApiService(CONFLUENCE_BASE_URL, CONFLUENCE_API_TOKEN);
 
     this.setupToolHandlers();
 

@@ -17,6 +17,9 @@ A Model Context Protocol (MCP) server for Confluence, enabling AI assistants to 
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Configuration](#configuration)
+    - [Authentication Method](#authentication-method)
+      - [Getting an API Token](#getting-an-api-token)
+      - [Environment Variables](#environment-variables)
     - [Claude Desktop / Cline Configuration](#claude-desktop--cline-configuration)
   - [Development](#development)
   - [Available Tools](#available-tools)
@@ -65,12 +68,25 @@ bun run build-unix
 
 ## Configuration
 
+### Authentication Method
+
+This project uses **Bearer Token** authentication to access the Confluence Cloud REST API, which is a secure and simple authentication method.
+
+#### Getting an API Token
+
+1. Visit the [Atlassian API Tokens management page](https://id.atlassian.com/manage/api-tokens)
+2. Click "Create API token"
+3. Enter a descriptive label (e.g., "Confluence MCP Server")
+4. Click "Create" and copy the generated token
+5. **Important**: Please save this token securely, it will only be displayed once
+
+#### Environment Variables
+
 To use this MCP server, you need to set the following environment variables:
 
 ```env
 CONFLUENCE_API_TOKEN=your_api_token
 CONFLUENCE_BASE_URL=your_confluence_instance_url  # e.g., https://your-domain.atlassian.net/wiki
-CONFLUENCE_USER_EMAIL=your_email
 ```
 
 ### Claude Desktop / Cline Configuration
@@ -85,8 +101,7 @@ Add this configuration to your settings file:
       "args": ["/absolute/path/to/confluence-mcp/dist/index.js"],
       "env": {
         "CONFLUENCE_API_TOKEN": "your_api_token",
-        "CONFLUENCE_BASE_URL": "your_confluence_instance_url/wiki",
-        "CONFLUENCE_USER_EMAIL": "your_email"
+        "CONFLUENCE_BASE_URL": "your_confluence_instance_url/wiki"
       }
     }
   }

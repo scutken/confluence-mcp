@@ -12,7 +12,7 @@ export class ConfluenceApiService {
   private headers: Headers;
   private requestDelay: number; // Delay in milliseconds
 
-  constructor(baseUrl: string, email: string, apiToken: string, requestDelayMs: number = 200) {
+  constructor(baseUrl: string, apiToken: string, requestDelayMs: number = 200) {
     // Default delay 200ms
     this.baseUrl = baseUrl;
     this.requestDelay = requestDelayMs;

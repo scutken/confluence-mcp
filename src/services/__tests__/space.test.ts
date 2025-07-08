@@ -29,7 +29,6 @@ const mockSpacesResponse = {
 describe('ConfluenceApiService - Spaces', () => {
   let apiService: ConfluenceApiService;
   const mockBaseUrl = 'https://example.atlassian.net/wiki';
-  const mockEmail = 'test@example.com';
   const mockApiToken = 'api-token-123';
 
   beforeEach(() => {
@@ -46,7 +45,7 @@ describe('ConfluenceApiService - Spaces', () => {
       );
     }) as any;
 
-    apiService = new ConfluenceApiService(mockBaseUrl, mockEmail, mockApiToken);
+    apiService = new ConfluenceApiService(mockBaseUrl, mockApiToken);
   });
 
   afterEach(() => {

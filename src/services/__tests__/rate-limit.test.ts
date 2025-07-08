@@ -8,7 +8,6 @@ global.fetch = mockFetch as any;
 
 describe('ConfluenceApiService - Rate Limiting', () => {
   const BASE_URL = 'https://test.atlassian.net/wiki';
-  const EMAIL = 'test@example.com';
   const TOKEN = 'test-token';
   // Explicitly type the spy to match Bun.sleep signature using bun:test Mock
   let sleepSpy: Mock<(ms: number | Date) => Promise<void>>;
@@ -40,7 +39,7 @@ describe('ConfluenceApiService - Rate Limiting', () => {
 
   it('should call Bun.sleep with the configured delay if requestDelay > 0', async () => {
     const delay = 150;
-    const apiService = new ConfluenceApiService(BASE_URL, EMAIL, TOKEN, delay);
+    const apiService = new ConfluenceApiService(BASE_URL, TOKEN, delay);
 
     // Call any method that uses fetchJson
     await apiService.getPage('123');
@@ -54,7 +53,7 @@ describe('ConfluenceApiService - Rate Limiting', () => {
 
   it('should NOT call Bun.sleep if requestDelay is 0', async () => {
     const delay = 0;
-    const apiService = new ConfluenceApiService(BASE_URL, EMAIL, TOKEN, delay);
+    const apiService = new ConfluenceApiService(BASE_URL, TOKEN, delay);
 
     await apiService.getPage('123');
 
@@ -64,7 +63,7 @@ describe('ConfluenceApiService - Rate Limiting', () => {
 
   it('should NOT call Bun.sleep if requestDelay is negative', async () => {
     const delay = -100;
-    const apiService = new ConfluenceApiService(BASE_URL, EMAIL, TOKEN, delay);
+    const apiService = new ConfluenceApiService(BASE_URL, TOKEN, delay);
 
     await apiService.getPage('123');
 
@@ -75,7 +74,7 @@ describe('ConfluenceApiService - Rate Limiting', () => {
   // Test rate limiting specifically for addAttachment as it has its own sleep call
   it('should call Bun.sleep before fetch in addAttachment if requestDelay > 0', async () => {
     const delay = 180;
-    const apiService = new ConfluenceApiService(BASE_URL, EMAIL, TOKEN, delay);
+    const apiService = new ConfluenceApiService(BASE_URL, TOKEN, delay);
     const fileContent = Buffer.from('test content');
     const filename = 'test.txt';
     const pageId = '456';
@@ -99,7 +98,7 @@ describe('ConfluenceApiService - Rate Limiting', () => {
 
   it('should NOT call Bun.sleep before fetch in addAttachment if requestDelay is 0', async () => {
     const delay = 0;
-    const apiService = new ConfluenceApiService(BASE_URL, EMAIL, TOKEN, delay);
+    const apiService = new ConfluenceApiService(BASE_URL, TOKEN, delay);
     const fileContent = Buffer.from('test content');
     const filename = 'test.txt';
     const pageId = '456';
