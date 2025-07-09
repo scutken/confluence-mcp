@@ -15,11 +15,23 @@ declare module 'bun' {
   interface Env {
     CONFLUENCE_API_TOKEN: string;
     CONFLUENCE_BASE_URL: string;
+    CONFLUENCE_READ_ONLY_MODE?: string;
   }
 }
 
 const CONFLUENCE_API_TOKEN = process.env.CONFLUENCE_API_TOKEN;
 const CONFLUENCE_BASE_URL = process.env.CONFLUENCE_BASE_URL;
+const CONFLUENCE_READ_ONLY_MODE = process.env.CONFLUENCE_READ_ONLY_MODE === 'true';
+
+// 定义只读模式下允许的操作
+const READ_ONLY_ALLOWED_TOOLS = [
+  'get_page',
+  'search_pages',
+  'get_spaces',
+  'get_comments',
+  'get_attachments',
+  'add_comment', // 只读模式下仍允许新增评论
+];
 
 if (!CONFLUENCE_API_TOKEN || !CONFLUENCE_BASE_URL) {
   throw new Error(
@@ -57,8 +69,8 @@ class ConfluenceServer {
   }
 
   private setupToolHandlers() {
-    this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
-      tools: [
+    this.server.setRequestHandler(ListToolsRequestSchema, async () => {
+      const allTools = [
         {
           name: 'get_page',
           description: '通过ID获取Confluence页面 / Retrieve a Confluence page by ID',
@@ -279,11 +291,31 @@ class ConfluenceServer {
             required: ['pageId', 'filename', 'fileContentBase64'],
           },
         },
-      ],
-    }));
+      ];
+
+      // 在只读模式下过滤工具
+      const filteredTools = CONFLUENCE_READ_ONLY_MODE
+        ? allTools.filter((tool) => READ_ONLY_ALLOWED_TOOLS.includes(tool.name))
+        : allTools;
+
+      return { tools: filteredTools };
+    });
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
+        // 检查只读模式权限
+        if (CONFLUENCE_READ_ONLY_MODE && !READ_ONLY_ALLOWED_TOOLS.includes(request.params.name)) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: `错误：当前处于只读模式，不允许执行 '${request.params.name}' 操作。只允许读取操作和新增评论。\nError: Currently in read-only mode, '${request.params.name}' operation is not allowed. Only read operations and adding comments are permitted.`,
+              },
+            ],
+            isError: true,
+          };
+        }
+
         switch (request.params.name) {
           case 'get_page': {
             const {

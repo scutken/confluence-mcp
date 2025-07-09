@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable MD033 -->
 <div align="center">
-  <strong>🇺🇸 English</strong> | <a href="README.md">🇨🇳 中文</a>
+  <strong>🇨🇳 中文</strong> | <a href="README_EN.md">🇺🇸 English</a>
 </div>
 
 A Model Context Protocol (MCP) server for Confluence, enabling AI assistants to interact with Confluence content through a standardized interface.
@@ -21,6 +21,8 @@ A Model Context Protocol (MCP) server for Confluence, enabling AI assistants to 
     - [Authentication Method](#authentication-method)
       - [Getting an API Token](#getting-an-api-token)
       - [Environment Variables](#environment-variables)
+        - [Method 1: Using .env file (Recommended)](#method-1-using-env-file-recommended)
+        - [Method 2: Direct Environment Variables](#method-2-direct-environment-variables)
     - [Deployment Methods](#deployment-methods)
       - [1. Stdio Mode (Default)](#1-stdio-mode-default)
       - [2. SSE Mode](#2-sse-mode)
@@ -36,6 +38,10 @@ A Model Context Protocol (MCP) server for Confluence, enabling AI assistants to 
     - [add_comment](#add_comment)
     - [get_attachments](#get_attachments)
     - [add_attachment](#add_attachment)
+  - [Read-Only Mode](#read-only-mode)
+    - [Allowed Operations](#allowed-operations)
+    - [Blocked Operations](#blocked-operations)
+    - [Read-Only Mode Usage Example](#read-only-mode-usage-example)
   - [License](#license)
 
 ## Features
@@ -112,6 +118,9 @@ To use this MCP server, you need to set the following environment variables.
 CONFLUENCE_API_TOKEN=your_api_token
 CONFLUENCE_BASE_URL=your_confluence_instance_url  # e.g., https://your-domain.atlassian.net/wiki
 
+# Permission control configuration (optional)
+CONFLUENCE_READ_ONLY_MODE=false  # Read-only mode (default: false)
+
 # Transport configuration (optional)
 MCP_TRANSPORT=stdio  # Options: stdio (default), sse, streamable-http
 MCP_PORT=3000        # HTTP server port (for sse and streamable-http only)
@@ -125,6 +134,7 @@ You can also set environment variables directly in the command line:
 ```bash
 export CONFLUENCE_API_TOKEN=your_api_token
 export CONFLUENCE_BASE_URL=https://your-domain.atlassian.net/wiki
+export CONFLUENCE_READ_ONLY_MODE=false
 export MCP_TRANSPORT=stdio
 ```
 
@@ -132,6 +142,7 @@ export MCP_TRANSPORT=stdio
 
 - `CONFLUENCE_API_TOKEN`: API token generated from your Atlassian account
 - `CONFLUENCE_BASE_URL`: Your Confluence instance URL, must include the `/wiki` path
+- `CONFLUENCE_READ_ONLY_MODE`: Read-only mode toggle, when set to `true` only allows read operations and adding comments, blocks create/update pages and add attachments
 - `MCP_TRANSPORT`: Transport method, defaults to `stdio`
 - `MCP_PORT`: HTTP server port, defaults to `3000`
 - `MCP_HOST`: HTTP server host, defaults to `localhost`
@@ -324,6 +335,45 @@ Add an attachment to a Confluence page. The `fileContentBase64` should be the ba
   "fileContentBase64": "JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+P...",
   "comment": "Uploaded new version of the document"
 }
+```
+
+## Read-Only Mode
+
+By setting the `CONFLUENCE_READ_ONLY_MODE=true` environment variable, you can enable read-only mode. In this mode:
+
+### Allowed Operations
+
+- `get_page` - Retrieve page content
+- `search_pages` - Search pages
+- `get_spaces` - Get space list
+- `get_comments` - Get comments
+- `get_attachments` - Get attachment list
+- `add_comment` - Add comments
+
+### Blocked Operations
+
+- `create_page` - Create pages
+- `update_page` - Update pages
+- `add_attachment` - Add attachments
+
+### Read-Only Mode Usage Example
+
+```bash
+# Enable read-only mode
+export CONFLUENCE_READ_ONLY_MODE=true
+bun dist/index.js
+```
+
+Or set in `.env` file:
+
+```env
+CONFLUENCE_READ_ONLY_MODE=true
+```
+
+When attempting to perform blocked operations, the system will return an error message:
+
+```text
+Error: Currently in read-only mode, 'create_page' operation is not allowed. Only read operations and adding comments are permitted.
 ```
 
 ## License

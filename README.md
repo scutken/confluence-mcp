@@ -4,7 +4,7 @@
 
 <!-- markdownlint-disable MD033 -->
 <div align="center">
-  <a href="README_EN.md">🇺🇸 English</a> | <strong>🇨🇳 中文</strong>
+  <strong>🇨🇳 中文</strong> | <a href="README_EN.md">🇺🇸 English</a>
 </div>
 
 一个用于 Confluence 的模型上下文协议 (MCP) 服务器，使 AI 助手能够通过标准化接口与 Confluence 内容进行交互。
@@ -92,6 +92,9 @@ bun run build-unix
 CONFLUENCE_API_TOKEN=your_api_token
 CONFLUENCE_BASE_URL=your_confluence_instance_url  # 例如：https://your-domain.atlassian.net/wiki
 
+# 权限控制配置（可选）
+CONFLUENCE_READ_ONLY_MODE=false  # 只读模式（默认：false）
+
 # 传输方式配置（可选）
 MCP_TRANSPORT=stdio  # 可选值：stdio（默认）、sse、streamable-http
 MCP_PORT=3000        # HTTP 服务端口（仅用于 sse 和 streamable-http）
@@ -105,6 +108,7 @@ MCP_HOST=localhost   # HTTP 服务主机（仅用于 sse 和 streamable-http）
 ```bash
 export CONFLUENCE_API_TOKEN=your_api_token
 export CONFLUENCE_BASE_URL=https://your-domain.atlassian.net/wiki
+export CONFLUENCE_READ_ONLY_MODE=false
 export MCP_TRANSPORT=stdio
 ```
 
@@ -112,6 +116,7 @@ export MCP_TRANSPORT=stdio
 
 - `CONFLUENCE_API_TOKEN`: 从 Atlassian 账户生成的 API token
 - `CONFLUENCE_BASE_URL`: 您的 Confluence 实例 URL，必须包含 `/wiki` 路径
+- `CONFLUENCE_READ_ONLY_MODE`: 只读模式开关，设置为 `true` 时只允许读取操作和新增评论，禁止创建/更新页面和添加附件
 - `MCP_TRANSPORT`: 传输方式，默认为 `stdio`
 - `MCP_PORT`: HTTP 服务端口，默认为 `3000`
 - `MCP_HOST`: HTTP 服务主机，默认为 `localhost`
@@ -387,6 +392,45 @@ Confluence MCP 服务器提供以下工具：
   "fileContentBase64": "JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+P...",
   "comment": "上传了文档的新版本"
 }
+```
+
+## 只读模式
+
+通过设置 `CONFLUENCE_READ_ONLY_MODE=true` 环境变量，可以启用只读模式。在此模式下：
+
+### 允许的操作
+
+- `get_page` - 获取页面内容
+- `search_pages` - 搜索页面
+- `get_spaces` - 获取空间列表
+- `get_comments` - 获取评论
+- `get_attachments` - 获取附件列表
+- `add_comment` - 新增评论
+
+### 禁止的操作
+
+- `create_page` - 创建页面
+- `update_page` - 更新页面
+- `add_attachment` - 添加附件
+
+### 只读模式使用示例
+
+```bash
+# 启用只读模式
+export CONFLUENCE_READ_ONLY_MODE=true
+bun dist/index.js
+```
+
+或在 `.env` 文件中设置：
+
+```env
+CONFLUENCE_READ_ONLY_MODE=true
+```
+
+当尝试执行被禁止的操作时，系统会返回错误信息：
+
+```text
+错误：当前处于只读模式，不允许执行 'create_page' 操作。只允许读取操作和新增评论。
 ```
 
 ## 许可证
