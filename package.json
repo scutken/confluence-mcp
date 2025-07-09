@@ -5,10 +5,14 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build-unix": "vite build && chmod +x dist/index.js",
+    "build-unix": "vite build && chmod +x dist/index.js && chmod +x dist/index-multi.js",
     "build": "vite build",
     "start": "bun dist/index.js",
+    "start:multi": "bun dist/index-multi.js",
+    "start:sse": "MCP_TRANSPORT=sse bun dist/index-multi.js",
+    "start:http": "MCP_TRANSPORT=streamable-http bun dist/index-multi.js",
     "dev": "bun --watch src/index.ts",
+    "dev:multi": "bun --watch src/index-multi.ts",
     "test": "bun test",
     "test:watch": "bun test --watch",
     "prepare": "husky"
@@ -23,6 +27,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/bun": "^1.2.13",
+    "@types/express": "^5.0.3",
     "@types/node": "^22.15.19",
     "husky": "^9.1.7",
     "lint-staged": "^16.0.0",
@@ -37,6 +42,8 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.4",
     "@types/sanitize-html": "^2.16.0",
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0",
     "sanitize-html": "^2.17.0"
   },
   "lint-staged": {

@@ -17,10 +17,14 @@ A Model Context Protocol (MCP) server for Confluence, enabling AI assistants to 
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Configuration](#configuration)
+    - [Transport Methods](#transport-methods)
     - [Authentication Method](#authentication-method)
       - [Getting an API Token](#getting-an-api-token)
       - [Environment Variables](#environment-variables)
-    - [Claude Desktop / Cline Configuration](#claude-desktop--cline-configuration)
+    - [Deployment Methods](#deployment-methods)
+      - [1. Stdio Mode (Default)](#1-stdio-mode-default)
+      - [2. SSE Mode](#2-sse-mode)
+      - [3. Streamable HTTP Mode (Recommended)](#3-streamable-http-mode-recommended)
   - [Development](#development)
   - [Available Tools](#available-tools)
     - [get_page](#get_page)
@@ -49,6 +53,7 @@ A Model Context Protocol (MCP) server for Confluence, enabling AI assistants to 
 
 - [Bun](https://bun.sh) (v1.0.0 or higher)
 - Confluence account with API access
+- Tested based on Atlassian Confluence 7.13.8
 
 ## Installation
 
@@ -68,6 +73,14 @@ bun run build-unix
 
 ## Configuration
 
+### Transport Methods
+
+This project supports multiple MCP transport methods:
+
+1. **stdio** - Standard Input/Output (default)
+2. **sse** - Server-Sent Events + HTTP POST
+3. **streamable-http** - Streamable HTTP (recommended for web deployment)
+
 ### Authentication Method
 
 This project uses **Bearer Token** authentication to access the Confluence Cloud REST API, which is a secure and simple authentication method.
@@ -82,16 +95,62 @@ This project uses **Bearer Token** authentication to access the Confluence Cloud
 
 #### Environment Variables
 
-To use this MCP server, you need to set the following environment variables:
+To use this MCP server, you need to set the following environment variables.
+
+##### Method 1: Using .env file (Recommended)
+
+1. Copy the example configuration file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit the `.env` file with your configuration:
 
 ```env
+# Required configuration
 CONFLUENCE_API_TOKEN=your_api_token
 CONFLUENCE_BASE_URL=your_confluence_instance_url  # e.g., https://your-domain.atlassian.net/wiki
+
+# Transport configuration (optional)
+MCP_TRANSPORT=stdio  # Options: stdio (default), sse, streamable-http
+MCP_PORT=3000        # HTTP server port (for sse and streamable-http only)
+MCP_HOST=localhost   # HTTP server host (for sse and streamable-http only)
 ```
 
-### Claude Desktop / Cline Configuration
+##### Method 2: Direct Environment Variables
 
-Add this configuration to your settings file:
+You can also set environment variables directly in the command line:
+
+```bash
+export CONFLUENCE_API_TOKEN=your_api_token
+export CONFLUENCE_BASE_URL=https://your-domain.atlassian.net/wiki
+export MCP_TRANSPORT=stdio
+```
+
+**Parameter Description:**
+
+- `CONFLUENCE_API_TOKEN`: API token generated from your Atlassian account
+- `CONFLUENCE_BASE_URL`: Your Confluence instance URL, must include the `/wiki` path
+- `MCP_TRANSPORT`: Transport method, defaults to `stdio`
+- `MCP_PORT`: HTTP server port, defaults to `3000`
+- `MCP_HOST`: HTTP server host, defaults to `localhost`
+
+### Deployment Methods
+
+#### 1. Stdio Mode (Default)
+
+Suitable for local integrations and command-line tools:
+
+```bash
+# Using original version (stdio only)
+bun dist/index.js
+
+# Using multi-transport version (defaults to stdio)
+bun dist/index-multi.js
+```
+
+**Claude Desktop / Cline Configuration:**
 
 ```json
 {
@@ -107,6 +166,42 @@ Add this configuration to your settings file:
   }
 }
 ```
+
+#### 2. SSE Mode
+
+Suitable for scenarios requiring HTTP interface while keeping it simple:
+
+```bash
+# Start SSE server
+MCP_TRANSPORT=sse MCP_PORT=3000 bun dist/index-multi.js
+```
+
+The server will provide services at the following endpoints:
+
+- `GET /sse` - Establish SSE connection
+- `POST /messages` - Send JSON-RPC messages
+
+#### 3. Streamable HTTP Mode (Recommended)
+
+Suitable for web deployment and production environments:
+
+```bash
+# Start Streamable HTTP server
+MCP_TRANSPORT=streamable-http MCP_PORT=3000 bun dist/index-multi.js
+```
+
+The server will provide services at the following endpoints:
+
+- `GET /mcp` - Establish SSE stream
+- `POST /mcp` - Send JSON-RPC messages
+- `DELETE /mcp` - Terminate session (requires session ID)
+
+**Features:**
+
+- Session management support
+- Connection resumability
+- Event replay
+- Better error handling
 
 ## Development
 
