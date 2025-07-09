@@ -89,7 +89,7 @@ bun run build-unix
 ```env
 # 必需的配置
 CONFLUENCE_API_TOKEN=your_api_token
-CONFLUENCE_BASE_URL=your_confluence_instance_url  # 例如：https://wiki.firstshare.cn/
+CONFLUENCE_BASE_URL=your_confluence_instance_url  # 例如：https://your-domain.atlassian.net/wiki
 
 # 传输方式配置（可选）
 MCP_TRANSPORT=stdio  # 可选值：stdio（默认）、sse、streamable-http
@@ -139,7 +139,7 @@ bun dist/index-multi.js
       "args": ["/absolute/path/to/confluence-mcp/dist/index.js"],
       "env": {
         "CONFLUENCE_API_TOKEN": "your_api_token",
-        "CONFLUENCE_BASE_URL": "https://wiki.firstshare.cn"
+        "CONFLUENCE_BASE_URL": "https://your-domain.atlassian.net/wiki"
       }
     }
   }
