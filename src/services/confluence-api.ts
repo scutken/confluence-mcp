@@ -7,6 +7,11 @@ import {
   GetAttachmentsResponse,
 } from '../types/confluence.js';
 
+// Cross-platform sleep function to replace Bun.sleep
+const sleep = (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 export class ConfluenceApiService {
   private baseUrl: string;
   private headers: Headers;
@@ -157,7 +162,7 @@ export class ConfluenceApiService {
   private async fetchJson<T>(url: string, init?: RequestInit): Promise<T> {
     // Add delay before making the request
     if (this.requestDelay > 0) {
-      await Bun.sleep(this.requestDelay);
+      await sleep(this.requestDelay);
     }
 
     const response = await fetch(this.baseUrl + url, {
@@ -428,7 +433,7 @@ export class ConfluenceApiService {
 
     // Add delay before making the request
     if (this.requestDelay > 0) {
-      await Bun.sleep(this.requestDelay);
+      await sleep(this.requestDelay);
     }
 
     const response = await fetch(`${this.baseUrl}/rest/api/content/${pageId}/child/attachment`, {

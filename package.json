@@ -1,12 +1,17 @@
 {
   "name": "confluence-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Confluence MCP Server",
   "module": "index.ts",
   "type": "module",
   "scripts": {
     "build-unix": "vite build && chmod +x dist/index.js && chmod +x dist/index-multi.js",
     "build": "vite build",
+    "build:dxt": "npm run build && node scripts/build-dxt.js",
+    "test:dxt": "node scripts/test-dxt.js",
+    "test:dxt:manual": "node scripts/test-dxt-manual.js",
+    "demo:dxt": "node scripts/demo-dxt-execution.js",
+    "diagnose": "node scripts/diagnose-mcp.js",
     "start": "bun dist/index.js",
     "start:multi": "bun dist/index-multi.js",
     "start:sse": "MCP_TRANSPORT=sse bun dist/index-multi.js",
@@ -23,7 +28,7 @@
     "typescript",
     "bun"
   ],
-  "author": "Dimosthenis Kaponis",
+  "author": "Kayu Tse",
   "license": "MIT",
   "devDependencies": {
     "@types/bun": "^1.2.13",

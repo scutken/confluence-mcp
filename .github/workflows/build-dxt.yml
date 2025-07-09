@@ -1,0 +1,52 @@
+name: Build DXT Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-dxt:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: bun install
+      
+    - name: Build project
+      run: bun run build
+      
+    - name: Build DXT extension
+      run: npm run build:dxt
+      
+    - name: Test DXT extension
+      run: npm run test:dxt
+      
+    - name: Upload DXT artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: confluence-mcp-dxt
+        path: confluence-mcp.dxt
+        
+    - name: Create Release (if tag)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: confluence-mcp.dxt
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

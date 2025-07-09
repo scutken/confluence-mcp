@@ -1,0 +1,106 @@
+{
+  "dxt_version": "0.1",
+  "name": "confluence-mcp",
+  "display_name": "Confluence MCP Server",
+  "version": "1.0.0",
+  "description": "A Model Context Protocol server for Confluence that enables AI assistants to interact with Confluence content through a standardized interface.",
+  "long_description": "This extension provides comprehensive Confluence integration for AI assistants through the Model Context Protocol (MCP). It enables searching, reading, creating, and updating Confluence pages, managing comments and attachments, and provides clean content formatting optimized for AI consumption. The server supports multiple transport methods including stdio, SSE, and streamable HTTP for flexible deployment options.",
+  "author": {
+    "name": "Kayu Tse",
+    "url": "https://github.com/cosmix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scutken/confluence-mcp.git"
+  },
+  "homepage": "https://github.com/scutken/confluence-mcp",
+  "documentation": "https://github.com/scutken/confluence-mcp/blob/main/README.md",
+  "support": "https://github.com/scutken/confluence-mcp/issues",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "confluence",
+    "atlassian",
+    "wiki",
+    "documentation",
+    "api",
+    "typescript",
+    "bun"
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "CONFLUENCE_API_TOKEN": "${user_config.api_token}",
+        "CONFLUENCE_BASE_URL": "${user_config.base_url}",
+        "MCP_TRANSPORT": "stdio"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "get_page",
+      "description": "Retrieve a Confluence page by ID with optional format and markup inclusion"
+    },
+    {
+      "name": "search_pages",
+      "description": "Search Confluence pages using CQL (Confluence Query Language)"
+    },
+    {
+      "name": "get_spaces",
+      "description": "List all available Confluence spaces"
+    },
+    {
+      "name": "create_page",
+      "description": "Create a new Confluence page in a specified space"
+    },
+    {
+      "name": "update_page",
+      "description": "Update an existing Confluence page"
+    },
+    {
+      "name": "get_comments",
+      "description": "Retrieve comments for a specific Confluence page"
+    },
+    {
+      "name": "add_comment",
+      "description": "Add a comment to a Confluence page"
+    },
+    {
+      "name": "get_attachments",
+      "description": "Retrieve attachments for a specific Confluence page"
+    },
+    {
+      "name": "add_attachment",
+      "description": "Add an attachment to a Confluence page"
+    }
+  ],
+  "tools_generated": false,
+  "prompts_generated": false,
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=16.0.0"
+    }
+  },
+  "user_config": {
+    "api_token": {
+      "type": "string",
+      "title": "Confluence API Token",
+      "description": "Your personal API token from Confluence. Go to Confluence → User Settings → Personal Access Tokens to create one.",
+      "sensitive": true,
+      "required": true
+    },
+    "base_url": {
+      "type": "string",
+      "title": "Confluence Base URL",
+      "description": "Your Confluence instance URL (e.g., https://your-domain.atlassian.net/wiki)",
+      "required": true,
+      "default": "https://your-domain.atlassian.net/wiki"
+    }
+  }
+}
